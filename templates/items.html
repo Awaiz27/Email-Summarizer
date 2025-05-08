@@ -1,0 +1,37 @@
+{% for item in items %}
+<div class="summary-container">
+    <h2>{{ item.title }}</h2>
+    <p>{{ item.summary }}</p>
+    <div>
+      <a href="{{ item.link }}" class="read-more">Read More</a>
+      <button class="bookmarking-btn"
+      hx-post="/bookmarks"
+      hx-headers='{"Content-Type": "application/json"}'
+      hx-ext="json-enc"
+      hx-vals='{{ {
+          "summary_id": item.id , 
+          "title": item.title,
+          "summary": item.summary,
+          "link": item.link,
+          "vendor": item.vendor
+      } |tojson }}'>
+        <span class="bookmarking-icon"></span>
+        Bookmark
+      </button>
+    </div>
+</div>
+{% endfor %}
+
+
+
+<div class="pagination">
+    <button hx-get="/items?offset={{ offset - limit }}&limit={{ limit }}" 
+            hx-target="#items-container"  hx-swap="innerHTML"           {% if offset == 0 %}disabled{% endif %}>
+        Previous Page
+    </button>
+    <button hx-get="/items?offset={{ offset + limit }}&limit={{ limit }}" 
+            hx-target="#items-container"  hx-swap="innerHTML"           {% if not has_next_page %}disabled{% endif %}>
+        Next Page
+    </button>
+</div>
+</div>
